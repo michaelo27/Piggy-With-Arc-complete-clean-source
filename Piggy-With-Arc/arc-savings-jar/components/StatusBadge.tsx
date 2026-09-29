@@ -42,8 +42,7 @@ export default function StatusBadge({
     <span
       role="status"
       aria-live="polite"
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium ${TONE[status]} ${className}`}
-    >
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium ${TONE[status]} ${className}`}>
       <BadgeIcon status={status} />
       <span className="truncate">{label ?? FALLBACK_LABEL[status]}</span>
     </span>
@@ -57,8 +56,7 @@ function BadgeIcon({ status }: { status: BadgeStatus }) {
         className="h-3.5 w-3.5 animate-spin"
         viewBox="0 0 24 24"
         fill="none"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         <circle
           cx="12"
           cy="12"
@@ -87,8 +85,7 @@ function BadgeIcon({ status }: { status: BadgeStatus }) {
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         <path d="M20 6 9 17l-5-5" />
       </svg>
     );
@@ -103,14 +100,18 @@ function BadgeIcon({ status }: { status: BadgeStatus }) {
         stroke="currentColor"
         strokeWidth="3"
         strokeLinecap="round"
-        aria-hidden="true"
-      >
+        aria-hidden="true">
         <path d="M18 6 6 18M6 6l12 12" />
       </svg>
     );
   }
 
-  return <span className="h-2 w-2 rounded-full bg-current opacity-60" aria-hidden="true" />;
+  return (
+    <span
+      className="h-2 w-2 rounded-full bg-current opacity-60"
+      aria-hidden="true"
+    />
+  );
 }
 
 export { StatusBadge };

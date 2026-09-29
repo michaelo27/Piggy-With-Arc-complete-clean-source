@@ -101,8 +101,7 @@ export default function BreakJarModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
-      aria-labelledby={titleId}
-    >
+      aria-labelledby={titleId}>
       <button
         type="button"
         aria-label="Close dialog"
@@ -126,21 +125,36 @@ export default function BreakJarModal({
 
         <p className="mt-4 text-sm leading-relaxed text-muted">
           Are you sure? Breaking your jar early means you will lose{" "}
-          <span className="font-semibold text-gold">10% ({formatUsd(penalty)} USDC)</span> as a
-          penalty fee. You will receive{" "}
-          <span className="font-semibold text-white">{formatUsd(returned)} USDC</span> back.
+          <span className="font-semibold text-gold">
+            10% ({formatUsd(penalty)} USDC)
+          </span>{" "}
+          as a penalty fee. You will receive{" "}
+          <span className="font-semibold text-white">
+            {formatUsd(returned)} USDC
+          </span>{" "}
+          back.
         </p>
 
         <dl className="mt-5 space-y-2 rounded-2xl border border-navy-500 bg-navy-800/60 p-4 text-sm">
           <Row label="Deposit" value={formatUsd(amount)} />
-          <Row label="Discipline fee (10%)" value={`- ${formatUsd(penalty)}`} tone="gold" />
+          <Row
+            label="Discipline fee (10%)"
+            value={`- ${formatUsd(penalty)}`}
+            tone="gold"
+          />
           <div className="border-t border-navy-500 pt-2">
-            <Row label="You receive" value={formatUsd(returned)} tone="accent" strong />
+            <Row
+              label="You receive"
+              value={formatUsd(returned)}
+              tone="accent"
+              strong
+            />
           </div>
         </dl>
 
         <label className="mt-5 block text-xs font-medium uppercase tracking-[0.14em] text-muted">
-          Type <span className="font-mono text-gold">{CONFIRM_WORD}</span> to continue
+          Type <span className="font-mono text-gold">{CONFIRM_WORD}</span> to
+          continue
           <input
             value={typed}
             onChange={(event) => setTyped(event.target.value)}
@@ -164,8 +178,7 @@ export default function BreakJarModal({
               type="button"
               onClick={onCancel}
               disabled={busy}
-              className="rounded-xl border border-navy-500 px-4 py-2.5 text-sm font-medium text-muted transition hover:border-muted/50 hover:text-white disabled:opacity-50"
-            >
+              className="rounded-xl border border-navy-500 px-4 py-2.5 text-sm font-medium text-muted transition hover:border-muted/50 hover:text-white disabled:opacity-50">
               Cancel
             </button>
             <button
@@ -173,8 +186,7 @@ export default function BreakJarModal({
               type="button"
               onClick={onConfirm}
               disabled={busy || !confirmed}
-              className="rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-navy-900 transition hover:bg-gold/90 disabled:cursor-not-allowed disabled:opacity-40"
-            >
+              className="rounded-xl bg-gold px-4 py-2.5 text-sm font-semibold text-navy-900 transition hover:bg-gold/90 disabled:cursor-not-allowed disabled:opacity-40">
               {busy ? "Breaking..." : "Yes, Break My Jar"}
             </button>
           </div>
@@ -197,11 +209,16 @@ function Row({
   strong?: boolean;
 }) {
   const toneClass =
-    tone === "gold" ? "text-gold" : tone === "accent" ? "text-accent" : "text-white";
+    tone === "gold"
+      ? "text-gold"
+      : tone === "accent"
+        ? "text-accent"
+        : "text-white";
   return (
     <div className="flex items-center justify-between gap-4">
       <dt className="text-muted">{label}</dt>
-      <dd className={`${toneClass} ${strong ? "text-base font-semibold" : "font-medium"} tabular-nums`}>
+      <dd
+        className={`${toneClass} ${strong ? "text-base font-semibold" : "font-medium"} tabular-nums`}>
         {value}
       </dd>
     </div>

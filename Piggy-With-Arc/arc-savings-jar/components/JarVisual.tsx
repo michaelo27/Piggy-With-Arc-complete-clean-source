@@ -36,7 +36,10 @@ export default function JarVisual({
   compact = false,
   className = "",
 }: JarVisualProps) {
-  const fill = Math.min(100, Math.max(0, Number.isFinite(fillPercentage) ? fillPercentage : 0));
+  const fill = Math.min(
+    100,
+    Math.max(0, Number.isFinite(fillPercentage) ? fillPercentage : 0),
+  );
   const liquidHeight = (fill / 100) * LIQUID_HEIGHT;
   const surfaceY = LIQUID_BOTTOM - liquidHeight;
   const waveShift = 8;
@@ -44,7 +47,8 @@ export default function JarVisual({
   const widthClass = compact ? "w-[190px]" : "w-[260px] sm:w-[300px]";
 
   return (
-    <div className={`relative flex flex-col items-center ${widthClass} ${className}`}>
+    <div
+      className={`relative flex flex-col items-center ${widthClass} ${className}`}>
       {/* Gold aura for a matured jar */}
       {isUnlocked ? (
         <div
@@ -59,8 +63,7 @@ export default function JarVisual({
         role="img"
         aria-label={`Savings jar ${jarName ? `named ${jarName}` : ""}, ${fill.toFixed(
           0,
-        )}% of the lock period elapsed, holding ${formatUsd(amount)}`}
-      >
+        )}% of the lock period elapsed, holding ${formatUsd(amount)}`}>
         <defs>
           {/* Inner glass volume - the liquid is clipped to this. */}
           <clipPath id="jar-clip">
@@ -92,10 +95,16 @@ export default function JarVisual({
           </linearGradient>
         </defs>
 
-        {/* ---------------------------------------------------------- liquid */}
+        {/*   liquid */}
         <g clipPath="url(#jar-clip)">
           {/* Empty-jar tint so the glass always reads as a container */}
-          <rect x="0" y={LIQUID_TOP} width={VIEW_W} height={LIQUID_HEIGHT} fill="#0E1730" />
+          <rect
+            x="0"
+            y={LIQUID_TOP}
+            width={VIEW_W}
+            height={LIQUID_HEIGHT}
+            fill="#0E1730"
+          />
 
           {liquidHeight > 0 ? (
             <>
@@ -108,7 +117,9 @@ export default function JarVisual({
               />
 
               {/* Back wave (slower, dimmer) */}
-              <g className="animate-jar-wave-slow" opacity={isUnlocked ? 0.35 : 0.28}>
+              <g
+                className="animate-jar-wave-slow"
+                opacity={isUnlocked ? 0.35 : 0.28}>
                 <path
                   d={wavePath(surfaceY - waveShift, waveShift * 1.4)}
                   fill={isUnlocked ? "#FFE08A" : "#7DE8FF"}
@@ -126,25 +137,64 @@ export default function JarVisual({
               {/* Rising bubbles while the jar is still filling up */}
               {!isUnlocked && fill < 99.5 ? (
                 <>
-                  <circle cx="72" cy={surfaceY + 40} r="3" fill="#BFF3FF" opacity="0.5" className="animate-bubble" />
-                  <circle cx="120" cy={surfaceY + 70} r="2" fill="#BFF3FF" opacity="0.45" className="animate-bubble-2" />
-                  <circle cx="98" cy={surfaceY + 110} r="2.5" fill="#BFF3FF" opacity="0.35" className="animate-bubble-3" />
+                  <circle
+                    cx="72"
+                    cy={surfaceY + 40}
+                    r="3"
+                    fill="#BFF3FF"
+                    opacity="0.5"
+                    className="animate-bubble"
+                  />
+                  <circle
+                    cx="120"
+                    cy={surfaceY + 70}
+                    r="2"
+                    fill="#BFF3FF"
+                    opacity="0.45"
+                    className="animate-bubble-2"
+                  />
+                  <circle
+                    cx="98"
+                    cy={surfaceY + 110}
+                    r="2.5"
+                    fill="#BFF3FF"
+                    opacity="0.35"
+                    className="animate-bubble-3"
+                  />
                 </>
               ) : null}
             </>
           ) : null}
 
           {/* Glass sheen + measurement marks, drawn over the liquid */}
-          <rect x="0" y={LIQUID_TOP} width={VIEW_W} height={LIQUID_HEIGHT} fill="url(#glass)" />
-          <g stroke="#FFFFFF" strokeOpacity="0.16" strokeWidth="1.5" strokeLinecap="round">
+          <rect
+            x="0"
+            y={LIQUID_TOP}
+            width={VIEW_W}
+            height={LIQUID_HEIGHT}
+            fill="url(#glass)"
+          />
+          <g
+            stroke="#FFFFFF"
+            strokeOpacity="0.16"
+            strokeWidth="1.5"
+            strokeLinecap="round">
             <line x1="164" y1="104" x2="182" y2="104" />
             <line x1="170" y1="146" x2="182" y2="146" />
             <line x1="164" y1="188" x2="182" y2="188" />
           </g>
-          <rect x="42" y="76" width="9" height="128" rx="4.5" fill="#FFFFFF" fillOpacity="0.10" />
+          <rect
+            x="42"
+            y="76"
+            width="9"
+            height="128"
+            rx="4.5"
+            fill="#FFFFFF"
+            fillOpacity="0.10"
+          />
         </g>
 
-        {/* ------------------------------------------------------------ jar */}
+        {/*  jar */}
         <path
           d={jarOutlinePath()}
           fill="none"
@@ -154,9 +204,30 @@ export default function JarVisual({
         />
 
         {/* Screw-top lid */}
-        <rect x="52" y="12" width="96" height="22" rx="7" fill="url(#lid)" stroke="rgba(160,174,192,0.45)" strokeWidth="1.5" />
-        <rect x="56" y="30" width="88" height="14" rx="5" fill="#141D38" stroke="rgba(160,174,192,0.35)" strokeWidth="1.5" />
-        <g stroke="rgba(255,255,255,0.18)" strokeWidth="1.5" strokeLinecap="round">
+        <rect
+          x="52"
+          y="12"
+          width="96"
+          height="22"
+          rx="7"
+          fill="url(#lid)"
+          stroke="rgba(160,174,192,0.45)"
+          strokeWidth="1.5"
+        />
+        <rect
+          x="56"
+          y="30"
+          width="88"
+          height="14"
+          rx="5"
+          fill="#141D38"
+          stroke="rgba(160,174,192,0.35)"
+          strokeWidth="1.5"
+        />
+        <g
+          stroke="rgba(255,255,255,0.18)"
+          strokeWidth="1.5"
+          strokeLinecap="round">
           <line x1="66" y1="17" x2="66" y2="29" />
           <line x1="82" y1="17" x2="82" y2="29" />
           <line x1="98" y1="17" x2="98" y2="29" />
@@ -182,8 +253,9 @@ export default function JarVisual({
             y="139"
             textAnchor="middle"
             className="fill-white"
-            style={{ font: `600 ${compact ? 19 : 21}px var(--font-inter), Inter, sans-serif` }}
-          >
+            style={{
+              font: `600 ${compact ? 19 : 21}px var(--font-inter), Inter, sans-serif`,
+            }}>
             {formatUsd(amount)}
           </text>
           <text
@@ -191,8 +263,7 @@ export default function JarVisual({
             y="160"
             textAnchor="middle"
             className="fill-muted"
-            style={{ font: `500 11px var(--font-inter), Inter, sans-serif` }}
-          >
+            style={{ font: `500 11px var(--font-inter), Inter, sans-serif` }}>
             {truncate(jarName, 20) || "Savings Jar"}
           </text>
         </g>
@@ -211,9 +282,9 @@ export default function JarVisual({
   );
 }
 
-/* -------------------------------------------------------------------------- */
+ 
 /*  Geometry helpers                                                          */
-/* -------------------------------------------------------------------------- */
+ 
 
 /** Inner volume used to clip the liquid. */
 function jarBodyPath(): string {
@@ -268,9 +339,13 @@ function wavePath(surfaceY: number, amplitude: number): string {
   for (let i = 0; i < wavelengths * 2; i += 1) {
     // Alternate crest / trough for a clean sine silhouette.
     const dir = i % 2 === 0 ? -1 : 1;
-    segments.push(`c ${q} ${dir * amplitude} ${q * 3} ${dir * amplitude} ${half} 0`);
+    segments.push(
+      `c ${q} ${dir * amplitude} ${q * 3} ${dir * amplitude} ${half} 0`,
+    );
   }
-  segments.push(`L${endX} ${LIQUID_BOTTOM + 24} L${startX} ${LIQUID_BOTTOM + 24} Z`);
+  segments.push(
+    `L${endX} ${LIQUID_BOTTOM + 24} L${startX} ${LIQUID_BOTTOM + 24} Z`,
+  );
   return segments.join(" ");
 }
 
@@ -289,10 +364,13 @@ function LockIcon({ open = false }: { open?: boolean }) {
       strokeWidth="2.2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
       <rect x="4" y="10" width="16" height="11" rx="2.5" />
-      {open ? <path d="M8 10V7a4 4 0 0 1 7.5-2" /> : <path d="M8 10V7a4 4 0 0 1 8 0v3" />}
+      {open ? (
+        <path d="M8 10V7a4 4 0 0 1 7.5-2" />
+      ) : (
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      )}
     </svg>
   );
 }

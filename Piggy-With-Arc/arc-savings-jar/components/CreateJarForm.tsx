@@ -82,7 +82,7 @@ const DEFAULT_DURATION = 2_592_000; // 30 days
  *
  * Two-step flow, exactly as specified:
  *   1. "Approve USDC"  -> ERC-20 approve(spender = SavingsJar, value = amount)
- *   2. "Create Jar 🫙" -> SavingsJar.createJar(amount, duration, name, targetAmount)
+ *   2. "Create Jar " -> SavingsJar.createJar(amount, duration, name, targetAmount)
  *
  * Step 1 is skipped automatically when the existing allowance already covers
  * the amount the user typed.
@@ -100,7 +100,7 @@ export default function CreateJarForm({
   const [targetInput, setTargetInput] = useState("");
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION);
 
-  /* ------------------------------ parsing -------------------------------- */
+  /*   parsing   */
 
   const parsedAmount = useMemo<{
     value: bigint | null;
@@ -122,14 +122,17 @@ export default function CreateJarForm({
     try {
       return { value: parseUsdc(targetInput), error: null };
     } catch (error) {
-      return { value: 0n, error: error instanceof Error ? error.message : "Invalid target" };
+      return {
+        value: 0n,
+        error: error instanceof Error ? error.message : "Invalid target",
+      };
     }
   }, [targetInput]);
 
   const amount = parsedAmount.value ?? 0n;
   const balanceNumber = Number(formatUnits(usdcBalance, USDC_DECIMALS));
 
-  /* ---------------------------- validation ------------------------------- */
+  /* validation  */
 
   const nameTrimmed = jarName.trim();
   const nameError =
@@ -158,7 +161,7 @@ export default function CreateJarForm({
 
   const formValid = canSubmitAmount && canSubmitName && !targetError;
 
-  /* ------------------------------ status --------------------------------- */
+  /*  status  */
 
   const busy = tx.stage === "approving" || tx.stage === "creating";
 
@@ -178,7 +181,7 @@ export default function CreateJarForm({
         ? tx.message
         : "";
 
-  /* ------------------------------ actions -------------------------------- */
+  /*   actions   */
 
   const handleApprove = useCallback(async () => {
     if (!canSubmitAmount) return;
@@ -238,7 +241,7 @@ export default function CreateJarForm({
   const sliderPosition = secondsToSlider(durationSeconds);
   const unlockDate = new Date(Date.now() + durationSeconds * 1_000);
 
-  /* -------------------------------- render ------------------------------- */
+  /* render   */
 
   return (
     <section className="w-full max-w-2xl animate-fade-up rounded-2xl border border-navy-500 bg-navy-700/60 p-6 shadow-card sm:p-8">
@@ -253,7 +256,7 @@ export default function CreateJarForm({
       </header>
 
       <div className="space-y-6">
-        {/* -------------------------------------------------------- jar name */}
+        {/* jar name */}
         <Field
           label="Jar Name"
           hint={`${nameTrimmed.length}/48 - stored on-chain`}
@@ -268,7 +271,7 @@ export default function CreateJarForm({
           />
         </Field>
 
-        {/* ----------------------------------------------------------- amount */}
+        {/*  amount */}
         <Field
           label="USDC Amount"
           hint={
@@ -319,12 +322,11 @@ export default function CreateJarForm({
           </div>
         </Field>
 
-        {/* ----------------------------------------------------------- target */}
+        {/*  target */}
         <Field
           label="Savings Target (optional)"
           hint="Set a goal to unlock principal early when reached"
-          error={targetError}
-        >
+          error={targetError}>
           <div className="relative">
             <input
               value={targetInput}
@@ -340,11 +342,12 @@ export default function CreateJarForm({
             </span>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-muted">
-            A configured target must exceed your initial deposit. Anyone may contribute, but only you can withdraw.
+            A configured target must exceed your initial deposit. Anyone may
+            contribute, but only you can withdraw.
           </p>
         </Field>
 
-        {/* --------------------------------------------------------- duration */}
+        {/* duration */}
         <Field label="Lock Duration" hint={`Min 24 hours · Max 365 days`}>
           <div className="flex flex-wrap gap-2">
             {PRESETS.map((preset) => {
@@ -409,14 +412,15 @@ export default function CreateJarForm({
           </p>
         </Field>
 
-        {/* ---------------------------------------------------------- warning */}
+        {/*  warning */}
         <div className="rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm text-gold">
-          ⚠️ Before maturity, breaking carries a <span className="font-semibold">10% penalty</span>.
-          Reaching an optional target unlocks principal penalty-free, while waiting until maturity is
-          required to earn reward share, time bonus, and points.
+          ⚠️ Before maturity, breaking carries a{" "}
+          <span className="font-semibold">10% penalty</span>. Reaching an
+          optional target unlocks principal penalty-free, while waiting until
+          maturity is required to earn reward share, time bonus, and points.
         </div>
 
-        {/* ---------------------------------------------------------- actions */}
+        {/* actions */}
         <div className="space-y-3">
           {allowanceCoversAmount ? (
             <p className="flex items-center gap-2 text-xs text-emerald-300">
@@ -458,7 +462,7 @@ export default function CreateJarForm({
                   <CheckIcon /> Jar Created! ✓
                 </>
               ) : (
-                "2. Create Jar 🫙"
+                "2. Create Jar "
               )}
             </button>
           </div>
@@ -484,9 +488,9 @@ export default function CreateJarForm({
   );
 }
 
-/* -------------------------------------------------------------------------- */
+ 
 /*  Presentational helpers                                                    */
-/* -------------------------------------------------------------------------- */
+ 
 
 function Field({
   label,

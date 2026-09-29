@@ -36,7 +36,7 @@ export default function CountdownTimer({
       <div
         className={`rounded-2xl border border-gold/40 bg-gold/10 px-5 py-4 text-center ${className}`}
       >
-        <p className="text-sm font-semibold text-gold">Lock expired - your jar is unlocked</p>
+        <p className="text-sm font-semibold text-gold">Lock expired . Your jar is unlocked</p>
       </div>
     );
   }

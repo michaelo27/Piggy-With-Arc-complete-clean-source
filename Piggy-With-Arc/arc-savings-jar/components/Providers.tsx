@@ -50,8 +50,7 @@ export function Providers({ children }: { children: ReactNode }) {
             borderRadius: "large",
             fontStack: "system",
             overlayBlur: "small",
-          })}
-        >
+          })}>
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>

@@ -7,7 +7,13 @@ import Header from "@/components/Header";
 import JarDashboard from "@/components/JarDashboard";
 import Landing from "@/components/Landing";
 import type { useSavingsJar } from "@/hooks/useSavingsJar";
-import type { ActivityData, JarData, JarTier, OwnedJar, TxState } from "@/lib/types";
+import type {
+  ActivityData,
+  JarData,
+  JarTier,
+  OwnedJar,
+  TxState,
+} from "@/lib/types";
 
 /**
  * /demo - a wallet-free walkthrough of all four UI states.
@@ -29,17 +35,27 @@ const STATES: readonly { id: DemoState; label: string; hint: string }[] = [
   { id: "5", label: "5 · Goal reached", hint: "Withdraw principal or wait" },
 ];
 
-const DEMO_ADDRESS = "0x7A51c9d3E4f0b8A6D2c1F5e9B0a4C8d7E6f1A2b3" as `0x${string}`;
-const DEMO_JAR_CONTRACT = "0x5aVcD1eF2b3A49586c7D8e9F0a1B2c3D4e5F6071" as `0x${string}`;
+const DEMO_ADDRESS =
+  "0x7A51c9d3E4f0b8A6D2c1F5e9B0a4C8d7E6f1A2b3" as `0x${string}`;
+const DEMO_JAR_CONTRACT =
+  "0x5aVcD1eF2b3A49586c7D8e9F0a1B2c3D4e5F6071" as `0x${string}`;
 
-const IDLE_TX: TxState = { stage: "idle", message: "", hash: null, error: null };
+const IDLE_TX: TxState = {
+  stage: "idle",
+  message: "",
+  hash: null,
+  error: null,
+};
 
 export default function DemoPage() {
   const [state, setState] = useState<DemoState>("3");
   // Which mock jar is on screen (null = the "new jar" form), so the jar tabs work in the demo too.
   const [selectedId, setSelectedId] = useState<number | null>(0);
 
-  const jar = useMemo<Jar>(() => buildMockJar(state, selectedId, setSelectedId), [state, selectedId]);
+  const jar = useMemo<Jar>(
+    () => buildMockJar(state, selectedId, setSelectedId),
+    [state, selectedId],
+  );
 
   return (
     <main className="relative flex min-h-screen flex-col">
@@ -64,15 +80,13 @@ export default function DemoPage() {
                   ? "border-accent bg-accent/15 text-accent"
                   : "border-navy-500 bg-navy-800/60 text-muted hover:border-accent/40 hover:text-white"
               }`}
-              aria-pressed={state === entry.id}
-            >
+              aria-pressed={state === entry.id}>
               {entry.label}
             </button>
           ))}
           <Link
             href="/"
-            className="ml-auto rounded-xl border border-navy-500 px-3 py-1.5 text-xs font-medium text-muted transition hover:border-accent/40 hover:text-white"
-          >
+            className="ml-auto rounded-xl border border-navy-500 px-3 py-1.5 text-xs font-medium text-muted transition hover:border-accent/40 hover:text-white">
             ← Back to the live app
           </Link>
         </div>
@@ -89,9 +103,9 @@ export default function DemoPage() {
   );
 }
 
-/* -------------------------------------------------------------------------- */
+ 
 /*  Mock data                                                                 */
-/* -------------------------------------------------------------------------- */
+ 
 
 function buildMockJar(
   state: DemoState,
@@ -141,9 +155,12 @@ function buildMockJar(
 
   // Demo-only stand-ins for what pendingReward()/previewBonus() would return -
   // enough to show the UI's reward/bonus badges without wiring real math here.
-  const mockPendingReward = (data: JarData): bigint => (data.amount * 6n) / 1000n; // ~0.6%
+  const mockPendingReward = (data: JarData): bigint =>
+    (data.amount * 6n) / 1000n; // ~0.6%
   const mockPreviewBonus = (data: JarData): bigint => {
-    const heldSeconds = BigInt(Math.max(0, now - Number(data.weightedDepositTime)));
+    const heldSeconds = BigInt(
+      Math.max(0, now - Number(data.weightedDepositTime)),
+    );
     return (data.amount * 500n * heldSeconds) / (10_000n * 31_536_000n); // 5% APR, simple interest
   };
 
@@ -156,16 +173,20 @@ function buildMockJar(
       createdAt: Number(data.createdAt),
       timeRemaining: Math.max(0, unlockTime - now),
       isUnlocked: unlockTime <= now,
-      isTargetReached: data.targetAmount > 0n && data.amount >= data.targetAmount,
+      isTargetReached:
+        data.targetAmount > 0n && data.amount >= data.targetAmount,
       pendingReward: mockPendingReward(data),
       previewBonus: mockPreviewBonus(data),
     };
   };
 
   // State 2 = a wallet with no jars yet. States 3 and 4 = a wallet with two jars.
-  const jars: OwnedJar[] = state === "2" ? [] : [toOwned(0, vacationData), toOwned(1, emergencyData)];
+  const jars: OwnedJar[] =
+    state === "2" ? [] : [toOwned(0, vacationData), toOwned(1, emergencyData)];
   const selected: OwnedJar | null =
-    state === "2" || selectedId === null ? null : (jars.find((entry) => entry.id === selectedId) ?? jars[0] ?? null);
+    state === "2" || selectedId === null
+      ? null
+      : (jars.find((entry) => entry.id === selectedId) ?? jars[0] ?? null);
 
   const emptyJar: JarData = {
     amount: 0n,
@@ -179,18 +200,50 @@ function buildMockJar(
   };
   const jarData = selected ? selected.data : emptyJar;
   const active = selected !== null;
-  const lockDuration = selected ? Math.max(0, selected.unlockTime - selected.createdAt) : 0;
+  const lockDuration = selected
+    ? Math.max(0, selected.unlockTime - selected.createdAt)
+    : 0;
   const timeRemaining = selected ? selected.timeRemaining : 0;
-  const totalLocked = jars.reduce<bigint>((sum, entry) => sum + entry.data.amount, 0n);
-  const mockContributor = "0x91B4b8b1a0B63cE39B7cC16D1dA4A2E5600a1234" as `0x${string}`;
-  const activityHistory: ActivityData[] = state === "2" ? [] : [
-    { activityType: 0, actor: DEMO_ADDRESS, counterparty: "0x0000000000000000000000000000000000000000", jarId: 0n, amount: 1_000_000_000n, timestamp: BigInt(now - 45 * day) },
-    { activityType: 1, actor: DEMO_ADDRESS, counterparty: "0x0000000000000000000000000000000000000000", jarId: 0n, amount: 150_500_000n, timestamp: BigInt(now - 30 * day) },
-    { activityType: 3, actor: mockContributor, counterparty: mockContributor, jarId: 0n, amount: 100_000_000n, timestamp: BigInt(now - 8 * day) },
-  ];
+  const totalLocked = jars.reduce<bigint>(
+    (sum, entry) => sum + entry.data.amount,
+    0n,
+  );
+  const mockContributor =
+    "0x91B4b8b1a0B63cE39B7cC16D1dA4A2E5600a1234" as `0x${string}`;
+  const activityHistory: ActivityData[] =
+    state === "2"
+      ? []
+      : [
+          {
+            activityType: 0,
+            actor: DEMO_ADDRESS,
+            counterparty: "0x0000000000000000000000000000000000000000",
+            jarId: 0n,
+            amount: 1_000_000_000n,
+            timestamp: BigInt(now - 45 * day),
+          },
+          {
+            activityType: 1,
+            actor: DEMO_ADDRESS,
+            counterparty: "0x0000000000000000000000000000000000000000",
+            jarId: 0n,
+            amount: 150_500_000n,
+            timestamp: BigInt(now - 30 * day),
+          },
+          {
+            activityType: 3,
+            actor: mockContributor,
+            counterparty: mockContributor,
+            jarId: 0n,
+            amount: 100_000_000n,
+            timestamp: BigInt(now - 8 * day),
+          },
+        ];
 
   const noopWrite = async () => {
-    console.log("[demo] write suppressed - this route never broadcasts a transaction");
+    console.log(
+      "[demo] write suppressed - this route never broadcasts a transaction",
+    );
     return false;
   };
 
@@ -219,14 +272,19 @@ function buildMockJar(
     bonusPoolBalance: 92_500_000_000n, // 92,500 USDC
     bonusPoolBalanceFormatted: "92500.0",
     bonusAprBps: 500n,
-    totalPendingRewards: jars.reduce<bigint>((sum, entry) => sum + entry.pendingReward, 0n),
+    totalPendingRewards: jars.reduce<bigint>(
+      (sum, entry) => sum + entry.pendingReward,
+      0n,
+    ),
 
     jarData,
     timeRemaining,
     isJarActive: active,
     isJarUnlocked: selected ? selected.isUnlocked : false,
     isTargetReached: selected ? selected.isTargetReached : false,
-    canWithdrawJar: selected ? selected.isUnlocked || selected.isTargetReached : false,
+    canWithdrawJar: selected
+      ? selected.isUnlocked || selected.isTargetReached
+      : false,
     isJarLoading: false,
     isJarError: false,
     jarError: null,
@@ -235,7 +293,10 @@ function buildMockJar(
     createdAt: selected ? selected.createdAt : 0,
     lockDurationSeconds: lockDuration,
     elapsedSeconds: active ? Math.max(0, lockDuration - timeRemaining) : 0,
-    progressPercent: active && lockDuration > 0 ? ((lockDuration - timeRemaining) / lockDuration) * 100 : 0,
+    progressPercent:
+      active && lockDuration > 0
+        ? ((lockDuration - timeRemaining) / lockDuration) * 100
+        : 0,
 
     usdcBalance: 4_820_750_000n, // 4,820.75 USDC
     usdcBalanceFormatted: "4820.75",

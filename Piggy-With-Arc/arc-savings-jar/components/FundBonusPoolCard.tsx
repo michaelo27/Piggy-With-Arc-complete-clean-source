@@ -45,7 +45,7 @@ export default function FundBonusPoolCard({
   const [open, setOpen] = useState(false);
   const [amountInput, setAmountInput] = useState("");
 
-  /* ------------------------------ derived --------------------------------- */
+  /* -  derived  */
 
   const amount = useMemo(() => {
     try {
@@ -78,22 +78,26 @@ export default function FundBonusPoolCard({
         ? tx.message
         : "";
 
-  /* ------------------------------ actions --------------------------------- */
+  /*  actions   */
 
   const handleApprove = useCallback(async () => {
     if (!canSubmitAmount) return;
-    console.log("[FundBonusPoolCard] approve requested for", amount.toString(), "raw USDC units");
+    console.log(
+      "[FundBonusPoolCard] approve requested for",
+      amount.toString(),
+      "raw USDC units",
+    );
     await onApprove(amount);
   }, [amount, canSubmitAmount, onApprove]);
 
   const handleFund = useCallback(async () => {
     if (!canSubmitAmount || !allowanceCoversAmount) return;
-    console.log("[FundBonusPoolCard] fundBonusPool requested", { amount: amountInput });
+    console.log("[FundBonusPoolCard] fundBonusPool requested", {
+      amount: amountInput,
+    });
     const ok = await onFund(amountInput.trim());
     if (ok) setAmountInput("");
   }, [allowanceCoversAmount, amountInput, canSubmitAmount, onFund]);
-
-  /* --------------------------------------------------------------------- */
 
   if (!open) {
     return (
@@ -103,8 +107,7 @@ export default function FundBonusPoolCard({
           console.log("[FundBonusPoolCard] opened");
           setOpen(true);
         }}
-        className="w-full rounded-xl border border-dashed border-navy-500 px-4 py-2.5 text-left text-sm text-muted transition hover:border-gold/40 hover:text-gold"
-      >
+        className="w-full rounded-xl border border-dashed border-navy-500 px-4 py-2.5 text-left text-sm text-muted transition hover:border-gold/40 hover:text-gold">
         + Fund the bonus pool
       </button>
     );
@@ -113,22 +116,26 @@ export default function FundBonusPoolCard({
   return (
     <div className="rounded-xl border border-navy-500 bg-navy-800/40 p-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-semibold text-white">Fund the bonus pool</h4>
+        <h4 className="text-sm font-semibold text-white">
+          Fund the bonus pool
+        </h4>
         <button
           type="button"
           onClick={() => setOpen(false)}
           aria-label="Close"
-          className="text-xs text-muted hover:text-white"
-        >
+          className="text-xs text-muted hover:text-white">
           ✕
         </button>
       </div>
 
       <p className="mt-1.5 text-xs leading-relaxed text-muted">
-        Unlike the reward share (funded automatically by early-break penalties), the{" "}
-        {(Number(bonusAprBps) / 100).toFixed(2)}%/year time bonus is only paid from what is in
-        this pool - currently <span className="font-mono text-gold">{bonusPoolBalanceFormatted} USDC</span>.
-        Anyone can top it up; there is no minimum.
+        Unlike the reward share (funded automatically by early-break penalties),
+        the {(Number(bonusAprBps) / 100).toFixed(2)}%/year time bonus is only
+        paid from what is in this pool currently{" "}
+        <span className="font-mono text-gold">
+          {bonusPoolBalanceFormatted} USDC
+        </span>
+        . Anyone can top it up; there is no minimum.
       </p>
 
       <div className="mt-3">
@@ -150,24 +157,28 @@ export default function FundBonusPoolCard({
         </div>
         <div className="mt-1 flex items-center justify-between text-[11px] text-muted">
           <span>
-            Balance: <span className="font-mono">{formatUsdc(usdcBalance)}</span>
+            Balance:{" "}
+            <span className="font-mono">{formatUsdc(usdcBalance)}</span>
           </span>
           <button
             type="button"
             className="link-chip"
             onClick={() => {
-              const raw = usdcBalance.toString().padStart(USDC_DECIMALS + 1, "0");
+              const raw = usdcBalance
+                .toString()
+                .padStart(USDC_DECIMALS + 1, "0");
               const whole = raw.slice(0, -USDC_DECIMALS) || "0";
               const frac = raw.slice(-USDC_DECIMALS);
               setAmountInput(`${whole}.${frac}`);
             }}
-            disabled={usdcBalance === 0n || busy}
-          >
+            disabled={usdcBalance === 0n || busy}>
             Max
           </button>
         </div>
         {balanceExceeded ? (
-          <p className="mt-1 text-[11px] text-red-400">Amount exceeds your USDC balance.</p>
+          <p className="mt-1 text-[11px] text-red-400">
+            Amount exceeds your USDC balance.
+          </p>
         ) : null}
       </div>
 
@@ -177,8 +188,7 @@ export default function FundBonusPoolCard({
             type="button"
             onClick={handleFund}
             disabled={!canSubmitAmount || busy}
-            className="btn-primary w-full justify-center"
-          >
+            className="btn-primary w-full justify-center">
             {tx.stage === "funding" ? "Funding..." : "Add to bonus pool"}
           </button>
         ) : (
@@ -186,13 +196,14 @@ export default function FundBonusPoolCard({
             type="button"
             onClick={handleApprove}
             disabled={!canSubmitAmount || busy}
-            className="btn-primary w-full justify-center"
-          >
+            className="btn-primary w-full justify-center">
             {tx.stage === "approving" ? "Approving..." : "Approve USDC"}
           </button>
         )}
 
-        {badgeLabel ? <StatusBadge status={badgeStatus} label={badgeLabel} /> : null}
+        {badgeLabel ? (
+          <StatusBadge status={badgeStatus} label={badgeLabel} />
+        ) : null}
       </div>
     </div>
   );
