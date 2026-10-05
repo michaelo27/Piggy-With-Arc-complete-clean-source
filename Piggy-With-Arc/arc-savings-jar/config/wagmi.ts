@@ -15,9 +15,9 @@ import { metaMask, walletConnect } from "wagmi/connectors";
 import { arc, arcTestnet, type Chain } from "viem/chains";
 
 /**
- * ============================================================================
+ 
  *  Arc chain configuration
- * ============================================================================
+ 
  *  Arc is Circle's EVM-compatible L1. Its native gas asset is USDC quoted at 18
  *  decimals (like every EVM native currency), while the ERC-20 USDC token that
  *  SavingsJar deposits has 6 decimals. Both facts are handled explicitly in the
@@ -86,9 +86,9 @@ export const chains = [
 export const ARC_MAINNET_ID = arcMainnet.id;
 export const ARC_TESTNET_ID = arcTestnetChain.id;
 
-// ---------------------------------------------------------------------------
+ 
 // Wallets
-// ---------------------------------------------------------------------------
+ 
 /**
  * WalletConnect requires a free project id from https://cloud.reown.com.
  * It is OPTIONAL: when absent we simply skip that connector, and every injected
